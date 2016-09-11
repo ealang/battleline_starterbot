@@ -1,4 +1,4 @@
-name := "testbot_battleline"
+name := "randombot"
 
 version := "1.0"
 
