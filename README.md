@@ -1,4 +1,4 @@
-# battleline_starterbot
+# Overview
 
 Bot for [Battleline game](https://bitbucket.org/patrick_viafore/boardgameaiengine/src)
 
@@ -6,5 +6,5 @@ Bot for [Battleline game](https://bitbucket.org/patrick_viafore/boardgameaiengin
 
 ``` bash
 sbt assembly
-java -jar target/scala-2.11/testbot_battleline-assembly-1.0.jar
+java -jar ./target/scala-2.11/bot-assembly-1.0.jar
 ```

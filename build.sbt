@@ -1,4 +1,4 @@
-name := "randombot"
+name := "bot"
 
 version := "1.0"
 
