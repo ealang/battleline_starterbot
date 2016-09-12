@@ -1,12 +1,15 @@
-import com.jhood.battlebot._
+import bot.ExpValueCardCalculator
+import com.jhood.battlebot.{StdMsgStrategyWrapper, CalculatedStrategy}
 
 import scala.io.StdIn.readLine
 
 object Main extends App {
-  val wrappedStrategy = new StdMsgStrategyWrapper(new CalculatedStrategy("RandoBot", RandomCalculator))
+  val wrappedStrategy = new StdMsgStrategyWrapper(new CalculatedStrategy("RandoBot", ExpValueCardCalculator()))
 
   while(true) {
     val response = wrappedStrategy.update(readLine())
-    println(response.getOrElse(""))
+    for (line <- response) {
+      println(line)
+    }
   }
 }
