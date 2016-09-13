@@ -1,6 +1,5 @@
 package bot
 
-import scala.util.Random
 import com.jhood.battlebot._
 
 object Constants {
@@ -37,6 +36,29 @@ object FlagValueCalculator {
   }
 }
 
+// Determine best possible hand that can be completed
+object BestCompletedFlagCalculator {
+
+  private def getMaxHand(myHand: Set[Card], fixedCards: Set[Card]): Int = {
+    def recurse(myHand: Set[Card], fixedCards: Set[Card]): Int = {
+      if (fixedCards.size == 3) {
+        FormationCalc.score(fixedCards.toList)
+      } else {
+        myHand.map(card => {
+          recurse(myHand - card, fixedCards + card)
+        }).max
+      }
+    }
+    recurse(myHand, fixedCards)
+  }
+
+  // return card and relative score
+  def apply(myHand: Set[Card], fixedCards: Set[Card]): (Card, Int) = {
+    myHand.map(card => (card, getMaxHand(myHand - card, fixedCards + card)))
+          .maxBy(_._2)
+  }
+}
+
 object ExpValueCardCalculator {
   def apply(): ExpValueCardCalculator = {
     new ExpValueCardCalculator
@@ -44,27 +66,23 @@ object ExpValueCardCalculator {
 }
 
 class ExpValueCardCalculator extends MoveCalculator {
+  import Constants._
+
   override def compute_play(myDirection: Direction,
                             myHand: List[Card],
                             myFlags: Map[Int, List[Card]],
                             opponentFlags: Map[Int, List[Card]],
                             claimedFlags: Map[Int, Direction]): PlayCardResponse = {
 
-    def cardsInFlag(flag: Int) = myFlags.getOrElse(flag, Nil).size
-    def flagWithCard(flag: Int, card: Card) = card :: myFlags.getOrElse(flag, Nil)
+    val unclaimedFlags = flags.toSet -- claimedFlags.keys.toSet -- myFlags.filter(pair => pair._2.size == 3).keySet
 
-    val flagValues = FlagValueCalculator(claimedFlags)
-    val bestFlag = flagValues.toList
-                             .view
-                             .filter(pair => cardsInFlag(pair._1) < 3)
-                             .sortBy(pair => pair._2)
-                             .last._1
+    val (response, _) = unclaimedFlags.map(flag => {
+      val (card, score) = BestCompletedFlagCalculator(myHand.toSet,
+                                                      myFlags.getOrElse(flag, Nil).toSet)
+      (PlayCardResponse(flag, card), score)
+    }).maxBy(_._2)
 
-    val bestCard = myHand.sortBy(card => {
-      val newHand = flagWithCard(bestFlag, card)
-      FormationCalc.score(newHand)
-    }).last
-    PlayCardResponse(bestFlag, bestCard)
+    response
   }
 }
 
