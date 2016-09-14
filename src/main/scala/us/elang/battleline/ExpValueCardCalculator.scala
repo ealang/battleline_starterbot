@@ -1,4 +1,4 @@
-package bot
+package us.elang.battleline
 
 import com.jhood.battlebot._
 
@@ -56,12 +56,6 @@ object BestCompletedFlagCalculator {
   def apply(myHand: Set[Card], fixedCards: Set[Card]): (Card, Int) = {
     myHand.map(card => (card, getMaxHand(myHand - card, fixedCards + card)))
           .maxBy(_._2)
-  }
-}
-
-object ExpValueCardCalculator {
-  def apply(): ExpValueCardCalculator = {
-    new ExpValueCardCalculator
   }
 }
 

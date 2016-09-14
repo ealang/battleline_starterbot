@@ -1,4 +1,4 @@
-package bot
+package us.elang.battleline
 
 import com.jhood.battlebot._
 import org.scalatest.{Matchers, WordSpec}
@@ -63,7 +63,7 @@ class TestExpValueCardCalculator extends WordSpec with Matchers {
 
   "ExpValueCardCalculator" should {
     "Always give best card to most valuable flag" in {
-      val response = ExpValueCardCalculator().compute_play(
+      val response = new ExpValueCardCalculator().compute_play(
         myDirection=North,
         myHand=List(Card("s1", 4), Card("s1", 3), Card("s4", 9)),
         myFlags=Map(
@@ -77,7 +77,7 @@ class TestExpValueCardCalculator extends WordSpec with Matchers {
     }
 
     "Not try to play to a flag that has been claimed" in {
-      val response = ExpValueCardCalculator().compute_play(
+      val response = new ExpValueCardCalculator().compute_play(
         myDirection=North,
         myHand=List(Card("s1", 4), Card("s1", 3), Card("s4", 9)),
         myFlags=Map(
@@ -95,7 +95,7 @@ class TestExpValueCardCalculator extends WordSpec with Matchers {
         flag -> (1 to 3).map(Card("r1", _)).toList
       }).toMap
 
-      val response = ExpValueCardCalculator().compute_play(
+      val response = new ExpValueCardCalculator().compute_play(
         myDirection=North,
         myHand=List(Card("s1", 4)),
         myFlags=allFlags + (9 -> List(Card("s2", 5), Card("s1", 5))),

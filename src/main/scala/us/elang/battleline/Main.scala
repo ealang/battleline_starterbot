@@ -1,5 +1,6 @@
-import bot.ExpValueCardCalculator
-import com.jhood.battlebot.{StdMsgStrategyWrapper, CalculatedStrategy}
+package us.elang.battleline
+
+import com.jhood.battlebot.{CalculatedStrategy, StdMsgStrategyWrapper}
 
 import scala.io.StdIn.readLine
 
